@@ -10,28 +10,29 @@ class Sharik():
         # start position
         self.x = x
         self.y = y
-        #path traveled
+        #Пройденый путь
         self.proidennye_kletki = list()
 
+    # Передвижение шарика
     def move(self, course):
         course = course.lower()
-        new_y, new_x = self.y, self.x  # Инициализация
+        new_y, new_x = self.y, self.x  # Устанавливаем
 
         if course == 'd':
             new_x = self.x + 1
             new_y = self.y
-            print('Raith', new_y, new_x)
+            #print('Raith', new_y, new_x)
         elif course == 'a':
             if self.x > 0:
                 new_x = self.x - 1
-                print('Left', new_y, new_x)
+                #print('Left', new_y, new_x)
         elif course == 's':
             new_y = self.y + 1
-            print('Douwn', new_y, new_x)
+            #print('Douwn', new_y, new_x)
         elif course == 'w':
             if self.y > 0:
                 new_y = self.y - 1
-                print('Up', new_y, new_x)
+                #print('Up', new_y, new_x)
         else:
             print("Некоректное направление")
             return None
@@ -56,52 +57,74 @@ class Labirynth():
     def draw_map(self):
         for row in self.karta_1:
             print(''.join(row))
-
+    #Проверяем положение шарика
     def move_dog(self, course):
 
         y, x = self.pes.y, self.pes.x
 
         new_pos = self.pes.move(course)
-        print(new_pos)
+
         if new_pos is None:
             print('Нет такого пути')
             return
+        self.last_pos()
         new_y, new_x = new_pos
+        # Удар о стену
 
-        if 0 <= new_y < len(self.karta_1) and 0 <= new_x < len(self.karta_1[0]):  # Проверка границ
-            if self.karta_1[new_y][new_x] == ' # ':
-                print('Шарик ударился о стену! Игра окончена')
-
-                if input('Сохранить игру? (d/n: ').lower() == 'd':
-                    self.save_game()
-
+        if self.karta_1[new_y][new_x] == ' # ':
+            print('Шарик ударился о стену! Игра окончена')
+            # Сохраняем игру
+            if input('Сохранить игру? (d/n: ').lower() == 'd':
+                self.save_game()
+                # Перезапуск
                 self.restart()
-
+        # Вернулся на предыдущую клетку
         if (new_y, new_x) in self.pes.proidennye_kletki:
             print('Шарик струсил и убежал! Игра окончена.')
+            if input('Сохранить игру? (d/n: ').lower() == 'd':
+                self.save_game()
             self.restart()
-
+        # Запись новых координат
         self.pes.y, self.pes.x = new_y, new_x
+
+        # Запись в пройденые клетки
         self.pes.add_to_proidennye(y, x)
+        # Идём оптимальным путём
         if (new_y, new_x) in self.optimal_path:
             print("Шарик нашел правильный путь. Следующий ход.")
-
+        else:#Шарик выбрал не оптимальный проход
+            print('Шарик заблудился! Игра окончена.')
+            if input('Сохранить игру? (d/n: ').lower() == 'd':
+                self.save_game()
+            self.restart()
+        # Нашли кость(Прошли весь оптимальный путь)
         if (new_y, new_x) == self.bones:
             print("Поздравляем! Шарик нашел косточку! Игра окончена.")
             return
-
-        self.karta_1[new_y][new_x] = " * "
-        print("x+y", new_y, new_x)
+        # Отображаем проёденый путь
+        self.karta_1[new_y][new_x] = " 0 "
+        # Перерисовываем карту
         self.draw_map()
 
+    # Перезапуск игры
     def restart(self):
         self.pes = Sharik(y=1, x=0)  # Создаем нового шарика
         self.karta_1 = copy.deepcopy(karta)  # Копируем карту заново
         self.play()  # Запускаем игру снова
 
+    # Запоминаем последнее положение
+    def last_pos(self):
+        result_game = {  # Создаем словарь result_game
+            'pes_x': self.pes.y,
+            'pes_y': self.pes.y,
+            'karta_1': self.karta_1,
+            'proidennye_kletki': self.pes.proidennye_kletki,
+        }
+
+    # Сохраняем игру в файл
     def save_game(self):
         result_game = {  # Создаем словарь result_game
-            'pes_x': self.pes.x,
+            'pes_x': self.pes.y,
             'pes_y': self.pes.y,
             'karta_1': self.karta_1,
             'proidennye_kletki': self.pes.proidennye_kletki,
@@ -109,8 +132,11 @@ class Labirynth():
         Game.save_games("game.json", result_game)  # Используем созданный словарь
         print('Игра сохранена.')
 
+    # Сама игра
     def play(self):
+        # Файл с сохранением
         saved_game =Game.load_game("game.json")
+        # Загрузка игры
         if saved_game:
             if input('Загрузить сохраненную игру? (д/н): ').lower() == 'd':
                 self.pes.x = saved_game['pes_x']
@@ -118,24 +144,25 @@ class Labirynth():
                 self.karta_1 = saved_game['karta_1']
                 self.pes.proidennye_kletki = saved_game['proidennye_kletki']  # Преобразуем список обратно в множество
                 self.draw_map()
+            # Удаляем игру
             else:
                 os.remove('game.json')  # Удаляем сохранение
                 print('Новая игра.')
                 self.pes = Sharik(y=1, x=0)
                 self.karta_1 = copy.deepcopy(karta)
                 self.draw_map()
-        else:
+        else: # Запускаем игру
             print('Новая игра.')
             self.pes = Sharik(y=1, x=0)
             self.karta_1 = copy.deepcopy(karta)
             self.draw_map()
 
-
+        #Цикл игры
         while self.pes.y != self.bones[0] or self.pes.x != self.bones[1]:
             course = input("Введите направление (вверх, вниз, влево, вправо): ")
             self.move_dog(course)
 
-
+#Клас сохранения и загрузки иры в файл
 class Game():
 
     def save_games( file, result_game):
