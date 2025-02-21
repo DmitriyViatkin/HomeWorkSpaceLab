@@ -108,6 +108,7 @@ class Labirynth():
 
     # Перезапуск игры
     def restart(self):
+        print('Новая игра')
         self.pes = Sharik(y=1, x=0)  # Создаем нового шарика
         self.karta_1 = copy.deepcopy(karta)  # Копируем карту заново
         self.play()  # Запускаем игру снова
@@ -147,15 +148,9 @@ class Labirynth():
             # Удаляем игру
             else:
                 os.remove('game.json')  # Удаляем сохранение
-                print('Новая игра.')
-                self.pes = Sharik(y=1, x=0)
-                self.karta_1 = copy.deepcopy(karta)
-                self.draw_map()
+                self.restart()
         else: # Запускаем игру
-            print('Новая игра.')
-            self.pes = Sharik(y=1, x=0)
-            self.karta_1 = copy.deepcopy(karta)
-            self.draw_map()
+            self.restart()
 
         #Цикл игры
         while self.pes.y != self.bones[0] or self.pes.x != self.bones[1]:
