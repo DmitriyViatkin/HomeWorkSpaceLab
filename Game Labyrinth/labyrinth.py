@@ -159,7 +159,7 @@ class Labirynth():
 
         #Цикл игры
         while self.pes.y != self.bones[0] or self.pes.x != self.bones[1]:
-            course = input("Введите направление (вверх, вниз, влево, вправо): ")
+            course = input("Введите направление (вверх = W, вниз = S, влево = A, вправо = D): ")
             self.move_dog(course)
 
 #Клас сохранения и загрузки иры в файл
