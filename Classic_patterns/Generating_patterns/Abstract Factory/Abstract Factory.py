@@ -164,7 +164,7 @@ class ShopTransport:
 
 
 if __name__ == '__main__':
-    brend = "Audi"
+    brend = "Mazda"
     transport = ShopTransport.create_factory(brend)
     product = ShopTransport(transport)
     product.create_tr()
