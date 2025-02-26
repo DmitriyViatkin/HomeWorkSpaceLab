@@ -34,6 +34,7 @@ if __name__ == "__main__":
     # меняем имя первому экземпляру
     my_singleton_1.set_name("John Gold")
     # выводим имена
+    print("выводим имена")
     print("Singleton 1: " + my_singleton_1.get_name())
     print("Singleton 2: " + my_singleton_2.get_name())
     # Выводим адреса объектов
