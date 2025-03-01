@@ -55,6 +55,8 @@ class FlyweightFactory:
     def list_flyweights(self):
         count = len(self.__flyweights)
         print(count)
+        for pair in self.__flyweights.values():
+            print(pair.get_data())
 def add_specialist_database(ff:FlyweightFactory, company, position, name, surname):
     print("add")
     flyweight = ff.get_flyweight(Shared(company, position))
