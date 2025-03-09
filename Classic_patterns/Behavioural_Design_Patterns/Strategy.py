@@ -25,7 +25,6 @@ class SocialNetworkReader(Reader):
     def parser(self, url:str):
         print("Parsing SocialNetwork ", url)
 
-
 if __name__ == "__main__":
 
     resource_reader  = ResourceReader(NewsSiteReader())

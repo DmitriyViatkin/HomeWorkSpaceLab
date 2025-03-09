@@ -57,10 +57,13 @@ class FlyweightFactory:
         print(count)
         for pair in self.__flyweights.values():
             print(pair.get_data())
-def add_specialist_database(ff:FlyweightFactory, company, position, name, surname):
-    print("add")
-    flyweight = ff.get_flyweight(Shared(company, position))
-    flyweight.process(Unique(name, surname))
+
+
+class Specialist_database:
+    def add_specialist_database(ff:FlyweightFactory, company, position, name, surname):
+        print("add")
+        flyweight = ff.get_flyweight(Shared(company, position))
+        flyweight.process(Unique(name, surname))
 
 
 if __name__ == '__main__':
@@ -68,5 +71,5 @@ if __name__ == '__main__':
         Shared("UMC", "HR")]
     factory = FlyweightFactory(shared_list)
     factory.list_flyweights()
-    add_specialist_database(factory, "ЗЖРК", "Электро мехвник", "John", "Gold")
+    Specialist_database.add_specialist_database(factory, "ЗЖРК", "Электро мехвник", "John", "Gold")
     factory.list_flyweights()
