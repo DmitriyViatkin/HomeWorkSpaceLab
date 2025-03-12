@@ -6,7 +6,7 @@ class MessageStore:
         self.file = filename
     def add_message(self, author, message):
         data = self.load_data()
-        print(data)
+
         mess= {
             "id": int(self.get_id()),
             "author": author,
@@ -14,9 +14,8 @@ class MessageStore:
         }
 
         data.append(mess)
-        print(data)
-        self.write(data)
 
+        self.write(data)
 
     def write(self,data):
 
@@ -30,8 +29,7 @@ class MessageStore:
     def get_message_id(self,id):
         for i in  self.load_data():
             if i['id'] == id:
-                for k, z in i.items():
-                    print(f"{k}: {z}")
+                return i
 
     def get_message_author(self,author):
         for i in  self.load_data():
@@ -60,7 +58,6 @@ class MessageStore:
                     pass
         return max_id + 1
 
-
     def del_id(self,id):
         mess = self.load_data()
         data_new = []
@@ -88,7 +85,7 @@ if __name__ == "__main__":
     me.add_message('Room', 'tvioe')
     me.add_message('Room', 'protvioe')'''
 
-    #me.get_message_id(2)
+    me.get_message_id(4)
     #me.get_message_id(3)
     #me.add_message( 'Jhon', 'gggggg')
     #me.add_message( 'Jhon', 'gggggg')
@@ -97,4 +94,4 @@ if __name__ == "__main__":
         for i, k in m.items():
             print(f"{i}: {k}") """
     #me.del_id(3)
-    me.del_author('Jhon')
+   # me.del_author('Jhon')
