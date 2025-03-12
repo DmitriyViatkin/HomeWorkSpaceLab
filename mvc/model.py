@@ -34,8 +34,7 @@ class MessageStore:
     def get_message_author(self,author):
         for i in  self.load_data():
             if i['author'] == author:
-                for k, z in i.items():
-                    print(f"{k}: {z}")
+                return i
 
     def load_data(self):
         try:
