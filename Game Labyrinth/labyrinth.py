@@ -2,7 +2,7 @@ import copy
 from karta import karta
 
 
-class Labirynth():
+class Labirynth:
 
     def __init__(self, karta_1):
         self.karta_1 = copy.deepcopy(karta)
