@@ -1,5 +1,5 @@
 import json
-
+from pyexpat.errors import messages
 
 class MessageStore:
     def __init__(self, filename='message.json'):
@@ -32,11 +32,9 @@ class MessageStore:
                 return i
 
     def get_message_author(self,author):
-        mess=[]
         for i in  self.load_data():
             if i['author'] == author:
-                mess.append(i)
-        return mess
+                return i
 
     def load_data(self):
         try:
@@ -74,25 +72,3 @@ class MessageStore:
             if i['author'] != author:
                data_new.append(i)
         self.write(data_new)
-
-
-
-
-
-if __name__ == "__main__":
-    me=MessageStore()
-    '''me.add_message('Jhon', 'false')
-    me.add_message('Iren', 'One')
-    me.add_message('Room', 'tvioe')
-    me.add_message('Room', 'protvioe')'''
-
-    #me.get_message_id(4)
-    #me.get_message_id(3)
-    #me.add_message( 'Jhon', 'gggggg')
-    #me.add_message( 'Jhon', 'gggggg')
-    print(me.get_message_author('Dimas'))
-    """ for m in me.get_all_message():
-        for i, k in m.items():
-            print(f"{i}: {k}") """
-    #me.del_id(3)
-   # me.del_author('Jhon')

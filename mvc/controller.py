@@ -22,7 +22,7 @@ class Controller:
 
     def show_message_author (self, author):
         messages= self.model.get_message_author(author)
-        self.view.show_message(messages)
+        self.view.show_messages(messages)
 
     def del_message_id (self, mess_id):
         self.model.del_id(mess_id)
@@ -40,7 +40,7 @@ class Controller:
                 \n3. Показать сообщения автора\n4. Показать сообщение по номеру\
                   \n5. Удалить сообщение \n6. Удалить автора \n7. Выйти")
 
-            command= int(input("Сделай свой вибор"))
+            command= int(input("Сделай свой вибор: "))
 
             if command == 1:
                 messages.add_message(input("Кто автор"),input("Введите Ваше сообщение"))
@@ -50,16 +50,16 @@ class Controller:
 
             elif command ==  3 :
 
-                messages.show_message_author(input("Введите автора"))
+                messages.show_message_author(input("Введите автора: "))
 
             elif command ==  4 :
-                messages.show_message_id(int(input("Введите номер сообщения")))
+                messages.show_message_id(int(input("Введите номер сообщения: ")))
 
             elif command == 5:
-                messages.del_message_id(int(input("Введите номер сообщения")))
+                messages.del_message_id(int(input("Введите номер сообщения: ")))
 
             elif command == 6:
-                messages.del_message_author(input("Введите автора"))
+                messages.del_message_author(input("Введите автора: "))
 
             elif command == 7 :
                 break

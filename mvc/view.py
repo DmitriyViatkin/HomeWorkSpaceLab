@@ -10,8 +10,8 @@ class View:
         if not message:
             print("Сообщений пока нет")
         else:
-             for i, k in message.items():
-                    print(f"{i}: {k}")
+             for i, k in message:
+                print(f"{i}: {k}")
 
     def show_text(self,text):
         print(text)

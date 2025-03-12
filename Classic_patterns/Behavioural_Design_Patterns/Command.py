@@ -1,93 +1,82 @@
 from abc import ABC, abstractmethod
-from typing import List,Deque
-
+from typing import List, Deque
+from collections import deque
 
 class ICommand(ABC):
-    """Базовій класс команд"""
+    """Базовый класс команд"""
     @abstractmethod
     def execute(self):
         pass
 
-class CoffeeMaker:
+    @abstractmethod
+    def undo(self):
+        pass
 
+class CoffeeMaker:
     def on(self):
         print("Кофеварка запущена")
 
     def heating(self):
-        print("Кофе будет подогреваться")
+        print("Кофе подогревается")
 
     def off(self):
-        print("Кофеварка будет отключена ")
+        print("Кофеварка выключена")
 
-
-class CoffeeMakerCommand(ICommand):
-    def __init__(self,maker:CoffeeMaker):
-        self.maker: CoffeeMaker = maker
-
-    def turn_on(self):
-        self.maker.on()
-
-    def turn_off(self):
-        self.maker.off()
+class CoffeeCommand(ICommand):
+    def __init__(self, maker: CoffeeMaker, action: str):
+        self.maker = maker
+        self.action = action
 
     def execute(self):
-        self.maker.heating()
+        if self.action == "on":
+            self.maker.on()
+        elif self.action == "heating":
+            self.maker.heating()
+        elif self.action == "off":
+            self.maker.off()
 
-class CoffeeAdjustCommand(ICommand):
-    def __init__(self,maker:CoffeeMaker):
-        self.maker:CoffeeMakerCommand = maker
-
-    def turn_on(self):
-        self.maker.turn_on()
-
-    def turn_heating(self):
-        self.maker.execute()
-
-    def turn_off(self):
-        self.maker.turn_off()
-
-
-
-
+    def undo(self):
+        if self.action == "on":
+            self.maker.off()
+        elif self.action == "heating":
+            pass # Нельзя отменить нагрев
+        elif self.action == "off":
+            self.maker.on()
 
 class MakerPult:
-    def __init__(self,number_of_buttons: int):
-        self.__commands: List[ICommand] = [None] * number_of_buttons
-        self.__history: Deque[ICommand] = []
+    def __init__(self, number_of_buttons: int):
+        self.commands: List[ICommand] = [None] * number_of_buttons
+        self.history: Deque[ICommand] = deque()
 
-    def set_command(self, button: int, command:ICommand):
-        self.__commands[button] = command
+    def set_command(self, button: int, command: ICommand):
+        self.commands[button] = command
 
-    def press_on(self, button: int):
-        self.__commands[button].turn_on()
-        self.__history.append(self.__commands[button])
-
-    def press_execute(self, button: int):
-        if button < len(self.__commands) and self.__commands[button]:
-            self.__commands[button].execute()
-            self.__history.append(self.__commands[button])
+    def press_button(self, button: int):
+        if self.commands[button]:
+            self.commands[button].execute()
+            self.history.append(self.commands[button])
         else:
             print(f"Команда для кнопки {button} не установлена.")
 
-    def press_cancel(self):
-        if self.__history:
-            command = self.__history.pop()
-            command.turn_off()
+    def press_undo(self):
+        if self.history:
+            command = self.history.pop()
+            command.undo()
         else:
             print("Нет команд для отмены.")
 
 if __name__ == "__main__":
-
     maker = CoffeeMaker()
-    makerpult = MakerPult(number_of_buttons=3)
+    pult = MakerPult(number_of_buttons=3)
 
-    makerpult.set_command(0, CoffeeMakerCommand(maker))
-    makerpult.set_command(1, CoffeeMakerCommand(maker))
-    makerpult.set_command(2, CoffeeMakerCommand(maker))
+    pult.set_command(0, CoffeeCommand(maker, "on"))
+    pult.set_command(1, CoffeeCommand(maker, "heating"))
+    pult.set_command(2, CoffeeCommand(maker, "off"))
 
+    pult.press_button(0)  # Включить
+    pult.press_button(1)  # Подогреть
+    pult.press_button(2)  # Выключить
 
-    makerpult.press_on(0)
-    makerpult.press_execute(1)
-    makerpult.press_on(2)
-
-    makerpult.press_cancel()
+    pult.press_undo()      # Отменить выключение
+    pult.press_undo()      # Отменить подогрев (нельзя)
+    pult.press_undo()

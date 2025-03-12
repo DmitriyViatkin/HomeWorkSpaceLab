@@ -1,4 +1,6 @@
 from typing import  Dict, List
+
+
 class Shared:
     def __init__(self, company, position):
         self.__company = company

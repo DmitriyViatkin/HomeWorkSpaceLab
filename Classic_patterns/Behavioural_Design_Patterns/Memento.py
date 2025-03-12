@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Deque
+from typing import List
 
 
 class Imemento(ABC):
@@ -59,7 +59,7 @@ class Memory:
 
     def __init__(self, exchange: Exchange):
         self.__exchange = exchange
-        self.__history : Deque[Imemento] =[]
+        self.__history : List[Imemento] =[]
 
     def bakup(self):
         self.__history.append(self.__exchange.save())
